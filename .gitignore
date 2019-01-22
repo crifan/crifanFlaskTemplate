@@ -1,0 +1,23 @@
+# PyCharm
+#.idea/
+
+# python
+*.pyc
+__pycache__/
+
+# current project
+debug/
+logs/development/
+logs/production/
+tmp/
+runtime/
+
+# omit redis db and celery beat if exist in current project root folder
+dump.rdb
+celerybeat-schedule
+
+Pipfile.lock
+
+*.log
+
+.vscode/
