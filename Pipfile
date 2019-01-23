@@ -17,6 +17,7 @@ pymysql = "*"
 flask-redis = "*"
 requests = "*"
 pillow = "*"
+mime = "*"
 
 [dev-packages]
 

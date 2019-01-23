@@ -1,6 +1,6 @@
 # crifanFlaskTemplate
 
-最后更新：`20190122`
+最后更新：`20190123`
 
 基于`Python 3`的Crifan's Flask项目模版，用于快速开始Flask项目开发
 
@@ -78,6 +78,8 @@ https://github.com/crifan/crifanFlaskTemplate
 │   ├── __init__.py
 │   └── user.py              # 某个模块
 ├── processData                 # 项目相关的数据处理相关脚本
+│   └── fileToMongo
+│       └── saveFileToMongodb.py # 把`assets`目录下的本地文件都保存到mongodb中，用于演示MongoDB相关api
 └── test                        # 测试相关
     └── locust
         └── locustfile.py       # locust性能测试脚本
@@ -92,6 +94,17 @@ https://github.com/crifan/crifanFlaskTemplate
   * 看看安装了哪些库以及相关的依赖：`pipenv graph`
   * 进入虚拟环境：`pipenv shell`
   * 看看当前python解释器：`which python`
+
+> `mime`库兼容性有问题，会导致直接运行`processData/fileToMongo/saveFileToMongodb.py`会报错：
+> `UnicodeDecodeError ascii codec can't decode byte 0xb4 in position 295 ordinal not in range 128`
+> 解决办法：修改文件
+> `/Users/crifan/.virtualenvs/crifanFlaskTemplate-jykEm3uR/lib/python3.6/site-packages/mime/mime_types.py`
+> 为：
+```python
+    def load_from_file(cls, type_file):
+        # data = open(type_file).read()
+        data = open(type_file, encoding="utf-8").read()
+```
 
 ### PyCharm中设置python解释器
 
@@ -223,6 +236,11 @@ supervisorctl status crifanFlaskTemplate
     * 本地测试：`http://0.0.0.0:52100`
     * 在线接口-IP形式：`http://production_server_ip:52100`
     * 在线接口-域名形式：`https://production.server_domain.com/url_mapping_in_nginx`
+
+举例：
+
+* `http://0.0.0.0:52100/user?id=2`
+* `http://12.34.56.78:52100/user?id=2`
 
 ### 用户
 
