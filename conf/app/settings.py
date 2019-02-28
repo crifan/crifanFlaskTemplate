@@ -108,16 +108,19 @@ LOG_FILE_FILENAME = os.path.join("logs", FLASK_ENV, "%s.log" % FLASK_APP_NAME)
 ################################################################################
 
 ENDPOINT_USER = "user"
+ENDPOINT_CAR = "car"
+
+ENDPOINT_FILE_FLASK_TEMPLATE_FILES = "file.flask_template.files"
 
 ################################################################################
 # MongoDB
 ################################################################################
 
-MONGODB_DB_DB1           = "db1_name"
-MONGODB_DB1_COLLECTION_1   = "db1_collection1"
+MONGODB_DB_FLASK_TEMPLATE = "flask_template"
+MONGODB_FLASK_TEMPLATE_COLLECTION_CAR = "car"
 
-MONGODB_DB_DB2            = "db2_name"
-MONGODB_DB2_COLLECTION_1  = "db2_collection1"
+MONGODB_FLASK_TEMPLATE_GRIDFS_FILES = "files"
+
 
 # internally compress origin too big (jpg/png/...) image, to speed frontend(miniprogram) load speed
 IMAGE_COMPRESS_SIZE = (300, 300)
@@ -146,8 +149,10 @@ TIMEZONE_LOCAL_HOURS = 8 # GMT+8
 
 
 ################################################################################
-# Static Files
+# Files: Static & Gridfs
 ################################################################################
+
+GRIDFS_FILE_AS_ATTACHMENT = True
 
 FILE_PREFIX = "http://%s:%d" % (FILE_URL_HOST, FLASK_PORT)
 
@@ -155,3 +160,11 @@ FILE_PREFIX = "http://%s:%d" % (FILE_URL_HOST, FLASK_PORT)
 FILE_STATIC_FOLDER = "assets"
 
 FILE_STATIC_IMAGES_PATH = os.path.join(FILE_STATIC_FOLDER, "images")
+
+FILE_PREFIX_ENDPOINT_FLASK_TEMPLATE_FILES   = "/file/flask_template/files"
+
+################################################################################
+# Car
+################################################################################
+
+CAR_PAGE_SIZE = 10

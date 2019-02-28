@@ -54,11 +54,10 @@ def register_extensions(app):
     mongoServerInfo = mongo.server_info()
     # log.debug("mongoServerInfo=%s", mongoServerInfo)
 
-    db_db1, collection_1, collection_1, db_db2, collection_2 = create_mongo_collection(mongo)
-    g.mongoDb1 = db_db1
-    g.mongoDb1Collection1 = collection_1
-    g.mongoDb2 = db_db2
-    g.mongoDb2Collection1 = collection_2
+    db_flask_template, collection_car, gridfs_files = create_mongo_collection(mongo)
+    g.mongoDbFlaskTemplate = db_flask_template
+    g.mongoDbFlaskTemplateCollectionCar = collection_car
+    g.mongoDbFlaskTemplateGridfsFiles = gridfs_files
 
     mysql_connection = create_mysql_connection(app)
     g.sqlConn = mysql_connection
@@ -78,10 +77,18 @@ def register_extensions(app):
 
 def create_rest_api(app):
     from modules.user import UserAPI
+    from modules.car import CarAPI
+    from modules.files import FileFlaskTemplateFilesAPI
 
     rest_api = Api()
 
     rest_api.add_resource(UserAPI, '/user', endpoint=settings.ENDPOINT_USER)
+    rest_api.add_resource(CarAPI, '/car', endpoint=settings.ENDPOINT_CAR)
+    rest_api.add_resource(FileFlaskTemplateFilesAPI,
+                          settings.FILE_PREFIX_ENDPOINT_FLASK_TEMPLATE_FILES,
+                          settings.FILE_PREFIX_ENDPOINT_FLASK_TEMPLATE_FILES + '/<fileId>',
+                          settings.FILE_PREFIX_ENDPOINT_FLASK_TEMPLATE_FILES + '/<fileId>/<fileName>',
+                          endpoint=settings.ENDPOINT_FILE_FLASK_TEMPLATE_FILES)
 
     rest_api.init_app(app)
     return rest_api
@@ -114,10 +121,9 @@ def create_mongo(app):
 
 def create_mongo_collection(mongo_client):
     # Pure PyMongo
-    db_db1 = mongo_client[settings.MONGODB_DB_DB1]
-    collection_1 = db_db1[settings.MONGODB_DB1_COLLECTION_1]
+    db_flask_template = mongo_client[settings.MONGODB_DB_FLASK_TEMPLATE]
+    collection_car = db_flask_template[settings.MONGODB_FLASK_TEMPLATE_COLLECTION_CAR]
 
-    db_db2 = mongo_client[settings.MONGODB_DB_DB2]
-    collection_2 = db_db2[settings.MONGODB_DB2_COLLECTION_1]
+    gridfs_files = GridFS(db_flask_template, settings.MONGODB_FLASK_TEMPLATE_GRIDFS_FILES)
 
-    return (db_db1, collection_1, collection_1, db_db2, collection_2)
+    return (db_flask_template, collection_car, gridfs_files)

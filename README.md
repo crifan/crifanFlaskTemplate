@@ -1,14 +1,12 @@
 # crifanFlaskTemplate
 
-最后更新：`20190123`
+最后更新：`20190228`
 
 基于`Python 3`的Crifan's Flask项目模版，用于快速开始Flask项目开发
 
 目前主要是自己用，希望对别人也有用
 
 ## TODO
-
-* [ ] 添加 `options`，`mongo files`的api和说明
 
 ## 功能特点
 
@@ -27,6 +25,13 @@
   * `pillow`：图片处理，比如压缩图片质量
 * 支持静态文件
   * 举例: 可以直接打开放在`assets/images`下面的图片文件：`http://127.0.0.1:52100/assets/images/crifan.com_logo.png`
+* 支持`MongoDB`的常见功能：
+  * 对于`Gridfs`文件
+    * `上传`
+    * `下载`
+  * 对于普通`collection`
+    * 获取单个`record`的`json`详情
+    * 获取分页数据
 
 ## 代码仓库
 
@@ -76,10 +81,13 @@ https://github.com/crifan/crifanFlaskTemplate
 │   └── production              # 保存生产环境log日志文件
 ├── modules                     # 保存业务逻辑相关的各种模块
 │   ├── __init__.py
-│   └── user.py              # 某个模块
+│   └── user.py                 # 演示`mysql`如何使用的用户模块
+│   └── car.py                  # 演示MongoDB如何使用的`flask_template.car`模块
 ├── processData                 # 项目相关的数据处理相关脚本
 │   └── fileToMongo
 │       └── saveFileToMongodb.py # 把`assets`目录下的本地文件都保存到mongodb中，用于演示MongoDB相关api
+│   └── saveCarToMongo
+│       └── saveCarToMongodb.py # 把`assets/car/汽车之家品牌车系车型数据-25564条 180429 utf8.csv`中的2万多条汽车数据保存到MongoDB的`flask_template.car`中
 └── test                        # 测试相关
     └── locust
         └── locustfile.py       # locust性能测试脚本
@@ -135,6 +143,32 @@ CREATE TABLE `user` (
 
 这样才能通过`user`接口，去 新建用户，获取用户信息，更新用户信息等操作。
 
+### 数据库：`MongoDB`
+
+#### 导入本地资源文件
+
+运行：
+
+```shell
+pipenv shell
+python processData/fileToMongo/saveFileToMongodb.py
+```
+
+即可把`assets/images`和`assets/audios`中的文件，都导入到`MongoDB`的`gridfs`即`flask_template.files`中去了，可供后续演示如何使用`MongoDB`。
+
+#### 导入模拟数据：Car汽车信息
+
+运行：
+
+```shell
+pipenv shell
+python processData/saveCarToMongo/saveCarToMongodb.py
+```
+
+即可把`assets/car/汽车之家品牌车系车型数据-25564条 180429 utf8.csv`中的2万多条汽车数据导入到`flask_template.car`中：
+
+![Mongo Compass中的flask_template.car](./assets/images/flask_template_car_mongo_compass.png)
+
 ## 项目开发和调试
 
 ### 如何调试
@@ -158,9 +192,17 @@ CREATE TABLE `user` (
 
 ### 接口测试
 
-期间可以用[Postman](https://book.crifan.com/books/api_tool_postman/website/)去测试Flask的API接口，比如：
+#### Postman
+
+测试Flask的API接口的工具很多，此处推荐：[Postman](https://book.crifan.com/books/api_tool_postman/website/)
+
+截图示例：
 
 ![Postman测试Flask的接口](assets/images/postman_test_flask_api.png)
+
+Postman的配置：
+
+为了方便用`Postman`调试，已导出自己的`Postman`配置，放在：`assets/postman/crifanFlaskTemplate.postman_collection_20190228.json`，去`Postman -> File -> Import`即可导入，即可直接用来开发测试Flask的api接口。
 
 ## 项目部署
 
@@ -244,7 +286,7 @@ supervisorctl status crifanFlaskTemplate
 
 ### 用户
 
-### 新建用户
+#### 新建用户
 
 * Request
   * Method: `POST`
@@ -279,7 +321,7 @@ supervisorctl status crifanFlaskTemplate
 }
 ```
 
-### 获取用户信息
+#### 获取用户信息
 
 * Request
   * Method: `GET`
@@ -305,7 +347,7 @@ supervisorctl status crifanFlaskTemplate
 }
 ```
 
-### 更新用户信息
+#### 更新用户信息
 
 * Request
   * Method: `PUT`
@@ -338,3 +380,220 @@ supervisorctl status crifanFlaskTemplate
     "message": "Update user ok"
 }
 ```
+
+### Car汽车
+
+#### 获取Car信息
+
+* Request
+  * Method: `GET`
+  * URL: `/car?id={carId}`
+    * eg: `/car?id=5c779841bfaa442ee1b14f90`
+  * Parameter
+    * `id`：str，Car的Mongodb的id
+* Response
+  * Body
+    * data
+```json
+{
+    "code": 200,
+    "data": {
+        "_id": "5c779841bfaa442ee1b14f90",
+        "brand": "雷克萨斯",
+        "model": "2017款 300h Mark Levinson豪华版",
+        "series": "雷克萨斯ES",
+        "subBrand": "雷克萨斯",
+        "url": "https://car.autohome.com.cn/pic/series-s31975/403.html#pvareaid=2042220"
+    },
+    "message": "Get car ok"
+}
+```
+
+#### 获取Car列表
+
+* Request
+  * Method: `GET`
+  * URL: `/car`
+    * Parameter
+      * `pageNumber`：int，页码
+      * `pageSize`：int，每一页的个数
+      * `searchText`：str，要查找的值
+        * 内部从如下字段去搜索：
+          * `url`
+          * `brand`
+          * `subBrand`
+          * `model`
+          * `series`
+    * eg: 
+      * `/car?pageNumber=1&pageSize=10&searchText=Jeep`
+* Response
+  * Body
+    * data
+```json
+[{
+    "code": 200,
+    "data": {
+        "_id": "5c779841bfaa442ee1b14f90",
+        "brand": "雷克萨斯",
+        "model": "2017款 300h Mark Levinson豪华版",
+        "series": "雷克萨斯ES",
+        "subBrand": "雷克萨斯",
+        "url": "https://car.autohome.com.cn/pic/series-s31975/403.html#pvareaid=2042220"
+    },
+    "message": "Get car ok"
+}]({
+    "code": 200,
+    "data": {
+        "carList": [
+            {
+                "_id": "5c77984dbfaa442ee1b16158",
+                "brand": "Jeep",
+                "model": "2011款 Mojave",
+                "series": "牧马人",
+                "subBrand": "Jeep(进口)",
+                "url": "https://car.autohome.com.cn/pic/series-s10006/121.html#pvareaid=2042220"
+            },
+            {
+                "_id": "5c77984dbfaa442ee1b1619a",
+                "brand": "Jeep",
+                "model": "2011款 3.0L CRD",
+                "series": "大切诺基(进口)",
+                "subBrand": "Jeep(进口)",
+                "url": "https://car.autohome.com.cn/pic/series-s10062/521.html#pvareaid=2042220"
+            },
+            {
+                "_id": "5c77984dbfaa442ee1b16157",
+                "brand": "Jeep",
+                "model": "2011款 2.8L CRD",
+                "series": "牧马人",
+                "subBrand": "Jeep(进口)",
+                "url": "https://car.autohome.com.cn/pic/series-s10064/121.html#pvareaid=2042220"
+            },
+            {
+                "_id": "5c77984dbfaa442ee1b161da",
+                "brand": "Jeep",
+                "model": "2011款 2.4L 四驱70周年限量版",
+                "series": "指南者(进口)",
+                "subBrand": "Jeep(进口)",
+                "url": "https://car.autohome.com.cn/pic/series-s10154/504.html#pvareaid=2042220"
+            },
+            {
+                "_id": "5c77984dbfaa442ee1b161dd",
+                "brand": "Jeep",
+                "model": "2011款 2.4L 四驱运动版",
+                "series": "指南者(进口)",
+                "subBrand": "Jeep(进口)",
+                "url": "https://car.autohome.com.cn/pic/series-s10272/504.html#pvareaid=2042220"
+            },
+            {
+                "_id": "5c77984dbfaa442ee1b161db",
+                "brand": "Jeep",
+                "model": "2011款 2.4L 四驱豪华导航版",
+                "series": "指南者(进口)",
+                "subBrand": "Jeep(进口)",
+                "url": "https://car.autohome.com.cn/pic/series-s10274/504.html#pvareaid=2042220"
+            },
+            {
+                "_id": "5c77984dbfaa442ee1b16217",
+                "brand": "Jeep",
+                "model": "2011款 2.4 运动版",
+                "series": "自由客",
+                "subBrand": "Jeep(进口)",
+                "url": "https://car.autohome.com.cn/pic/series-s10278/777.html#pvareaid=2042220"
+            },
+            {
+                "_id": "5c77984dbfaa442ee1b16219",
+                "brand": "Jeep",
+                "model": "2011款 2.4 经典版",
+                "series": "自由客",
+                "subBrand": "Jeep(进口)",
+                "url": "https://car.autohome.com.cn/pic/series-s10279/777.html#pvareaid=2042220"
+            },
+            {
+                "_id": "5c77984dbfaa442ee1b1619b",
+                "brand": "Jeep",
+                "model": "2011款 UK Version",
+                "series": "大切诺基(进口)",
+                "subBrand": "Jeep(进口)",
+                "url": "https://car.autohome.com.cn/pic/series-s10385/521.html#pvareaid=2042220"
+            },
+            {
+                "_id": "5c77984dbfaa442ee1b16218",
+                "brand": "Jeep",
+                "model": "2011款 2.4 经典升级版",
+                "series": "自由客",
+                "subBrand": "Jeep(进口)",
+                "url": "https://car.autohome.com.cn/pic/series-s10541/777.html#pvareaid=2042220"
+            }
+        ],
+        "curPageNum": 1,
+        "hasNext": true,
+        "hasPrev": false,
+        "numPerPage": 10,
+        "totalNum": 335,
+        "totalPageNum": 34
+    },
+    "message": "Get car ok"
+})
+```
+
+### MongoDB的Gridfs文件
+
+#### 下载文件
+
+* Request
+  * Method: `GET`
+  * URL: `/file/flask_template/files/{fileId}/[filename]`
+    * Parameter
+      * `fileId`：gridfs中file的id，必填
+      * [`filename`]：gridfs中file的filename，选填
+    * eg：
+      * 某图片：
+        * gridfs id: 5c47fdb2bfaa4495e591718a
+        * filename: crifan.com_logo.png
+        * ->
+        * `http://0.0.0.0:52100/file/flask_template/files/5c47fdb2bfaa4495e591718a/crifan.com_logo.png`
+      * 某音频文件：
+        * gridfs id: 5c47fdb2bfaa4495e5917184
+        * filename: Sadness - Enigma part - 1.mp3
+        * ->
+        * `http://0.0.0.0:52100/file/flask_template/files/5c47fdb2bfaa4495e5917184/Sadness%20-%20Enigma%20part%20-%201.mp3`
+
+* Response
+  * 可下载的文件
+    * 可通过浏览器或Postman去测试下载文件
+
+#### 上传文件
+
+* Request
+  * Method: `POST`
+  * URL: `/file/flask_template/files`
+  * Headers:
+    * `filename`: `{yourFileName}`
+      * `yourFileName`：上传的文件的文件名
+        * eg: `Snip20190228_14.png`
+  * Body
+    * `postman`测试时，选择的是`binary`类型，再通过弹框选择某个文件即可
+* Response
+  * Body
+    * data
+```json
+{
+    "code": 200,
+    "message": "Create new gridfs file ok",
+    "data": {
+        "_id": "5c77ac60bfaa44375a908eff",
+        "filename": "Snip20190228_14.png",
+        "contentType": "image/png",
+        "length": 322599,
+        "uploadDate": "2019-02-28 09:39:44.616000",
+        "md5": "e58ddc6367ee2bf340135d7727ef8b20"
+    }
+}
+```
+
+提示：
+
+此文件即可通过url访问：
+
+`http://0.0.0.0:52100/file/flask_template/files/5c77ac60bfaa44375a908eff/Snip20190228_14.png`

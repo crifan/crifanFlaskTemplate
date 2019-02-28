@@ -8,10 +8,7 @@ from common.FlaskLogSingleton import log
 # from conf.app import settings
 from common.util import getCurUtcTime, getCurLocalTime, genRespFailDict
 
-mongoDb1 = g.mongoDb1
-mongoDb1Collection1 = g.mongoDb1Collection1
-mongoDb2 = g.mongoDb2
-mongoDb2Collection1 = g.mongoDb2Collection1
+
 sqlConn = g.sqlConn
 redisStore = g.redisStore
 

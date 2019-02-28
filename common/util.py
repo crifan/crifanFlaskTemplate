@@ -3,28 +3,30 @@ import sys
 import uuid
 import io
 import datetime
-from flask import send_file
-from flask import jsonify
+import re
+import random
+import string
+import base64
+import json
+
+import requests
 from bson.objectid import ObjectId
 from urllib.parse import quote_plus
+from flask import send_file
+from flask import jsonify
+from werkzeug.exceptions import *
+
 try:
     from PIL import Image
 except:
     print("Need install pillow before use Image functions")
 
-import base64
-import json
 try:
     from Crypto.Cipher import AES
 except:
     print("Need install pycrypto before use Wechat functions")
 
-import requests
-import random
-import string
-
 from pymongo import MongoClient
-
 from configparser import ConfigParser
 from common import crifanMysql
 
@@ -66,14 +68,30 @@ def getCurDatetimeStr(outputFormat="%Y%m%d_%H%M%S"):
 # Flask Functions
 #----------------------------------------
 
-def sendFile(fileBytes, contentType, outputFilename, asAttachment=True):
+#----------------------------------------
+# Flask Functions
+#----------------------------------------
+
+
+def genRespFailDict(code=400, message="Unknown reason"):
+    respFailJsonDict = {
+        "code" : code,
+        "message" : message,
+        # "data": {}
+    }
+    # return respFailJsonDict
+    return jsonify(respFailJsonDict)
+
+
+def sendFile(fileBytes, contentType, outputFilename, asAttachment=True, range=None):
     """
         flask return downloadable file or file's binary stream data
             example url: http://127.0.0.1:34800/audio/5c1c631c127588257d568eba/3569.mp3
     :param fileBytes:  file binary bytes
     :param contentType: MIME content type, eg: audio/mpeg
     :param outputFilename: output filename, eg: 3569.mp3
-    :param asAttachment: True to return downloable file with filename, False to return binary stream file data
+    :param asAttachment: True to return downloadable file with filename, False to return binary stream file data
+    :param range: range header to support 206=Partial Content, eg: bytes=1146880-
     :return: Flask response
     """
     """Flask API use this to send out file (to browser, browser can directly download file)"""
@@ -84,20 +102,69 @@ def sendFile(fileBytes, contentType, outputFilename, asAttachment=True):
     #     as_attachment=asAttachment,
     #     attachment_filename=outputFilename
     # )
-    fileLength = len(fileBytes)
+    respBytes = fileBytes
+    respStatusCode = 200
+
+    totalLen = len(fileBytes)
+    respContentLength = totalLen
+
+    contentRange = None
+    # support range header of 206=Partial Content to support api caller to continue download or audio drag to play
+    if range:
+        # responseFile.status_code = 206 # Partial Content
+        # bytes=1146880-
+        foundBytes = re.search("bytes=(?P<byteStart>\d+)(-(?P<byteEnd>\d+)?)?", range)
+        if foundBytes:
+            byteStart = foundBytes.group("byteStart")
+            # if byteStart:
+            byteStart = int(byteStart)
+            # for debug
+            # if byteStart >= 0:
+            if byteStart > 0:
+                respStatusCode = 206
+
+            byteEnd = foundBytes.group("byteEnd")
+            if byteEnd:
+                byteEnd = int(byteEnd)
+                if byteEnd > 0:
+                    respStatusCode = 206
+            else:
+                byteEnd = totalLen - 1
+
+            byteEndIdx = byteEnd + 1
+            respBytes = fileBytes[byteStart:byteEndIdx]
+            respContentLength = len(respBytes)
+
+            # print("byteStart=%d, byteEnd=%d, respContentLength=%s" % (byteStart, byteEnd, respContentLength))
+            # Content-Range: bytes 2162688-4010305/4010306
+            contentRange = "bytes %d-%d/%d" % (byteStart, byteEnd, totalLen)
+
     responseFile = send_file(
-        io.BytesIO(fileBytes),
+        # io.BytesIO(fileBytes),
+        io.BytesIO(respBytes),
         mimetype=contentType,
         as_attachment=asAttachment,
-        attachment_filename=outputFilename
+        attachment_filename=outputFilename,
+        # conditional=True # Note: after test conditional is not work well, so implement 206 by myself
     )
+
+    responseFile.headers["Connection"] = "keep-alive"
+    # to support audio miniprogram first seek and drag to play
+    # if contentType == "audio/mpeg":
+    responseFile.headers["Accept-Ranges"] = "bytes"
+
     # add Content-Length to support miniprogram iOS background play audio works, not error: 10003
-    responseFile.headers["Content-Length"] = fileLength
+    responseFile.headers["Content-Length"] = respContentLength
+
+    # if respStatusCode != 200:
+    responseFile.status_code = respStatusCode
+    if contentRange:
+        responseFile.headers["Content-Range"] = contentRange
+
     return responseFile
 
 
-
-def getGridfsFile(curGridfs, fileId, fileName=None, filterDataFunc=None, asAttachment=True):
+def getGridfsFile(curGridfs, fileId, fileName=None, filterDataFunc=None, asAttachment=True, range=None):
     """
         generate downloadable gridfs file
     :param curGridfs: current gridfs collection
@@ -107,47 +174,33 @@ def getGridfsFile(curGridfs, fileId, fileName=None, filterDataFunc=None, asAttac
     :return:
         gridfs file, support api caller(browser) to download file
     """
-    print("getGridfsFile: curGridfs=%s, fileId=%s, fileName=%s, filterDataFunc=%s" %
-          (curGridfs, fileId, fileName, filterDataFunc))
+    # print("getGridfsFile: curGridfs=%s, fileId=%s, fileName=%s, filterDataFunc=%s" %
+    #       (curGridfs, fileId, fileName, filterDataFunc))
     # curGridfs=<gridfs.GridFS object at 0x104c5d748>, fileId=5c1c6322127588257d56935e, fileName=vedio game.png, filterDataFunc=<function compressImageSize at 0x104f6e2f0>
 
     fileIdObj = ObjectId(fileId)
-    print("fileIdObj=%s" % fileIdObj)
+    # print("fileIdObj=%s" % fileIdObj)
     if not curGridfs.exists({"_id": fileIdObj}):
-        respDict = {
-            "code": 404,
-            "message": "Not found gridfs file from id %s" % fileId,
-            "data": {}
-        }
-        return jsonify(respDict)
+        return genRespFailDict(NotFound.code, "Not found gridfs file from id %s" % fileId)
 
     fileObj = curGridfs.get(fileIdObj)
-    print("fileObj=%s, filename=%s, chunkSize=%s, length=%s, contentType=%s" %
-          (fileObj, fileObj.filename, fileObj.chunk_size, fileObj.length, fileObj.content_type))
-    print("lengthInMB=%.2f MB" % float(fileObj.length / (1024 * 1024)))
+    # print("fileObj=%s, filename=%s, chunkSize=%s, length=%s, contentType=%s" %
+    #       (fileObj, fileObj.filename, fileObj.chunk_size, fileObj.length, fileObj.content_type))
+    # print("lengthInMB=%.2f MB" % float(fileObj.length / (1024 * 1024)))
 
     fileBytes = fileObj.read()
-    print("len(fileBytes)=%s" % len(fileBytes))
+    # print("len(fileBytes)=%s" % len(fileBytes))
 
     if filterDataFunc:
         fileBytes = filterDataFunc(fileBytes)
-        print("after process: len(fileBytes)=%s" % len(fileBytes))
+        # print("after process: len(fileBytes)=%s" % len(fileBytes))
 
     outputFilename = fileObj.filename
     if fileName:
         outputFilename = fileName
-    print("outputFilename=%s" % outputFilename)
+    # print("outputFilename=%s" % outputFilename)
 
-    return sendFile(fileBytes, fileObj.content_type, outputFilename, asAttachment=asAttachment)
-
-
-def genRespFailDict(code = 400, message = "Unknown reason"):
-    respFailJsonDict = {
-        "code" : code,
-        "message" : message,
-    }
-    # return respFailJsonDict
-    return jsonify(respFailJsonDict)
+    return sendFile(fileBytes, fileObj.content_type, outputFilename, asAttachment=asAttachment, range=range)
 
 
 #----------------------------------------

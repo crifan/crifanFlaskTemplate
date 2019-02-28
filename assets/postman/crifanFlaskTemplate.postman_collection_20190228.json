@@ -1,0 +1,606 @@
+{
+	"info": {
+		"_postman_id": "757cf434-f481-43a2-9b1f-0078402b7ca4",
+		"name": "crifanFlaskTemplate",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "用户：新建",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"crifan\",\n\t\"phone\": \"13800001111\"\n}"
+				},
+				"url": {
+					"raw": "{{server_address}}/user",
+					"host": [
+						"{{server_address}}"
+					],
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "新建用户：crifan",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"crifan\",\n\t\"phone\": \"13800001111\"\n}"
+						},
+						"url": {
+							"raw": "{{server_address}}/user",
+							"host": [
+								"{{server_address}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "294"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/0.14.1 Python/3.6.4"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 22 Jan 2019 03:21:07 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"code\": 200,\n    \"data\": {\n        \"createdTime\": \"Tue, 22 Jan 2019 03:20:51 GMT\",\n        \"id\": 2,\n        \"lastActiveTime\": \"Tue, 22 Jan 2019 03:20:51 GMT\",\n        \"name\": \"crifan\",\n        \"phone\": \"13800001111\",\n        \"updatedTime\": \"Tue, 22 Jan 2019 03:20:51 GMT\"\n    },\n    \"message\": \"Create user ok\"\n}"
+				}
+			]
+		},
+		{
+			"name": "用户：获取信息",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{server_address}}/user?id=2",
+					"host": [
+						"{{server_address}}"
+					],
+					"path": [
+						"user"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "获取用户信息",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{server_address}}/user?id=2",
+							"host": [
+								"{{server_address}}"
+							],
+							"path": [
+								"user"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "291"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/0.14.1 Python/3.6.4"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 22 Jan 2019 03:35:36 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"code\": 200,\n    \"data\": {\n        \"createdTime\": \"Tue, 22 Jan 2019 03:20:51 GMT\",\n        \"id\": 2,\n        \"lastActiveTime\": \"Tue, 22 Jan 2019 03:20:51 GMT\",\n        \"name\": \"crifan\",\n        \"phone\": \"13800001111\",\n        \"updatedTime\": \"Tue, 22 Jan 2019 03:20:51 GMT\"\n    },\n    \"message\": \"Get user ok\"\n}"
+				}
+			]
+		},
+		{
+			"name": "用户：更新",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": 2,\n\t\"phone\": \"13811112222\"\n}"
+				},
+				"url": {
+					"raw": "{{server_address}}/user",
+					"host": [
+						"{{server_address}}"
+					],
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "更新用户信息",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\": 2,\n\t\"phone\": \"13811112222\"\n}"
+						},
+						"url": {
+							"raw": "{{server_address}}/user",
+							"host": [
+								"{{server_address}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "294"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/0.14.1 Python/3.6.4"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 22 Jan 2019 03:54:52 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"code\": 200,\n    \"data\": {\n        \"createdTime\": \"Tue, 22 Jan 2019 03:20:51 GMT\",\n        \"id\": 2,\n        \"lastActiveTime\": \"Tue, 22 Jan 2019 03:54:45 GMT\",\n        \"name\": \"crifan\",\n        \"phone\": \"13800001111\",\n        \"updatedTime\": \"Tue, 22 Jan 2019 03:54:45 GMT\"\n    },\n    \"message\": \"Update user ok\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Car：获取信息",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{server_address}}/car?id=5c779841bfaa442ee1b14f90",
+					"host": [
+						"{{server_address}}"
+					],
+					"path": [
+						"car"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "5c779841bfaa442ee1b14f90"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Car：获取信息 5c779841bfaa442ee1b14f90",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{server_address}}/car?id=5c779841bfaa442ee1b14f90",
+							"host": [
+								"{{server_address}}"
+							],
+							"path": [
+								"car"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "5c779841bfaa442ee1b14f90"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "386"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/0.14.1 Python/3.6.4"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 28 Feb 2019 08:49:55 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"code\": 200,\n    \"data\": {\n        \"_id\": \"5c779841bfaa442ee1b14f90\",\n        \"brand\": \"雷克萨斯\",\n        \"model\": \"2017款 300h Mark Levinson豪华版\",\n        \"series\": \"雷克萨斯ES\",\n        \"subBrand\": \"雷克萨斯\",\n        \"url\": \"https://car.autohome.com.cn/pic/series-s31975/403.html#pvareaid=2042220\"\n    },\n    \"message\": \"Get car ok\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Car：获取列表",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{server_address}}/car?pageNumber=1&pageSize=10&searchText=Jeep",
+					"host": [
+						"{{server_address}}"
+					],
+					"path": [
+						"car"
+					],
+					"query": [
+						{
+							"key": "pageNumber",
+							"value": "1"
+						},
+						{
+							"key": "pageSize",
+							"value": "10"
+						},
+						{
+							"key": "searchText",
+							"value": "Jeep"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Car：获取列表 Jeep",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{server_address}}/car?pageNumber=1&pageSize=10&searchText=Jeep",
+							"host": [
+								"{{server_address}}"
+							],
+							"path": [
+								"car"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								},
+								{
+									"key": "searchText",
+									"value": "Jeep"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "3485"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/0.14.1 Python/3.6.4"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 28 Feb 2019 08:54:24 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"code\": 200,\n    \"data\": {\n        \"carList\": [\n            {\n                \"_id\": \"5c77984dbfaa442ee1b16158\",\n                \"brand\": \"Jeep\",\n                \"model\": \"2011款 Mojave\",\n                \"series\": \"牧马人\",\n                \"subBrand\": \"Jeep(进口)\",\n                \"url\": \"https://car.autohome.com.cn/pic/series-s10006/121.html#pvareaid=2042220\"\n            },\n            {\n                \"_id\": \"5c77984dbfaa442ee1b1619a\",\n                \"brand\": \"Jeep\",\n                \"model\": \"2011款 3.0L CRD\",\n                \"series\": \"大切诺基(进口)\",\n                \"subBrand\": \"Jeep(进口)\",\n                \"url\": \"https://car.autohome.com.cn/pic/series-s10062/521.html#pvareaid=2042220\"\n            },\n            {\n                \"_id\": \"5c77984dbfaa442ee1b16157\",\n                \"brand\": \"Jeep\",\n                \"model\": \"2011款 2.8L CRD\",\n                \"series\": \"牧马人\",\n                \"subBrand\": \"Jeep(进口)\",\n                \"url\": \"https://car.autohome.com.cn/pic/series-s10064/121.html#pvareaid=2042220\"\n            },\n            {\n                \"_id\": \"5c77984dbfaa442ee1b161da\",\n                \"brand\": \"Jeep\",\n                \"model\": \"2011款 2.4L 四驱70周年限量版\",\n                \"series\": \"指南者(进口)\",\n                \"subBrand\": \"Jeep(进口)\",\n                \"url\": \"https://car.autohome.com.cn/pic/series-s10154/504.html#pvareaid=2042220\"\n            },\n            {\n                \"_id\": \"5c77984dbfaa442ee1b161dd\",\n                \"brand\": \"Jeep\",\n                \"model\": \"2011款 2.4L 四驱运动版\",\n                \"series\": \"指南者(进口)\",\n                \"subBrand\": \"Jeep(进口)\",\n                \"url\": \"https://car.autohome.com.cn/pic/series-s10272/504.html#pvareaid=2042220\"\n            },\n            {\n                \"_id\": \"5c77984dbfaa442ee1b161db\",\n                \"brand\": \"Jeep\",\n                \"model\": \"2011款 2.4L 四驱豪华导航版\",\n                \"series\": \"指南者(进口)\",\n                \"subBrand\": \"Jeep(进口)\",\n                \"url\": \"https://car.autohome.com.cn/pic/series-s10274/504.html#pvareaid=2042220\"\n            },\n            {\n                \"_id\": \"5c77984dbfaa442ee1b16217\",\n                \"brand\": \"Jeep\",\n                \"model\": \"2011款 2.4 运动版\",\n                \"series\": \"自由客\",\n                \"subBrand\": \"Jeep(进口)\",\n                \"url\": \"https://car.autohome.com.cn/pic/series-s10278/777.html#pvareaid=2042220\"\n            },\n            {\n                \"_id\": \"5c77984dbfaa442ee1b16219\",\n                \"brand\": \"Jeep\",\n                \"model\": \"2011款 2.4 经典版\",\n                \"series\": \"自由客\",\n                \"subBrand\": \"Jeep(进口)\",\n                \"url\": \"https://car.autohome.com.cn/pic/series-s10279/777.html#pvareaid=2042220\"\n            },\n            {\n                \"_id\": \"5c77984dbfaa442ee1b1619b\",\n                \"brand\": \"Jeep\",\n                \"model\": \"2011款 UK Version\",\n                \"series\": \"大切诺基(进口)\",\n                \"subBrand\": \"Jeep(进口)\",\n                \"url\": \"https://car.autohome.com.cn/pic/series-s10385/521.html#pvareaid=2042220\"\n            },\n            {\n                \"_id\": \"5c77984dbfaa442ee1b16218\",\n                \"brand\": \"Jeep\",\n                \"model\": \"2011款 2.4 经典升级版\",\n                \"series\": \"自由客\",\n                \"subBrand\": \"Jeep(进口)\",\n                \"url\": \"https://car.autohome.com.cn/pic/series-s10541/777.html#pvareaid=2042220\"\n            }\n        ],\n        \"curPageNum\": 1,\n        \"hasNext\": true,\n        \"hasPrev\": false,\n        \"numPerPage\": 10,\n        \"totalNum\": 335,\n        \"totalPageNum\": 34\n    },\n    \"message\": \"Get car ok\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Gridfs：获取文件",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{server_address}}/file/flask_template/files/5c47fdb2bfaa4495e5917184/Sadness%20-%20Enigma%20part%20-%201.mp3",
+					"host": [
+						"{{server_address}}"
+					],
+					"path": [
+						"file",
+						"flask_template",
+						"files",
+						"5c47fdb2bfaa4495e5917184",
+						"Sadness%20-%20Enigma%20part%20-%201.mp3"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Car：获取列表 Jeep",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{server_address}}/car?pageNumber=1&pageSize=10&searchText=Jeep",
+							"host": [
+								"{{server_address}}"
+							],
+							"path": [
+								"car"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								},
+								{
+									"key": "searchText",
+									"value": "Jeep"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "3485"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/0.14.1 Python/3.6.4"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 28 Feb 2019 08:54:24 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"code\": 200,\n    \"data\": {\n        \"carList\": [\n            {\n                \"_id\": \"5c77984dbfaa442ee1b16158\",\n                \"brand\": \"Jeep\",\n                \"model\": \"2011款 Mojave\",\n                \"series\": \"牧马人\",\n                \"subBrand\": \"Jeep(进口)\",\n                \"url\": \"https://car.autohome.com.cn/pic/series-s10006/121.html#pvareaid=2042220\"\n            },\n            {\n                \"_id\": \"5c77984dbfaa442ee1b1619a\",\n                \"brand\": \"Jeep\",\n                \"model\": \"2011款 3.0L CRD\",\n                \"series\": \"大切诺基(进口)\",\n                \"subBrand\": \"Jeep(进口)\",\n                \"url\": \"https://car.autohome.com.cn/pic/series-s10062/521.html#pvareaid=2042220\"\n            },\n            {\n                \"_id\": \"5c77984dbfaa442ee1b16157\",\n                \"brand\": \"Jeep\",\n                \"model\": \"2011款 2.8L CRD\",\n                \"series\": \"牧马人\",\n                \"subBrand\": \"Jeep(进口)\",\n                \"url\": \"https://car.autohome.com.cn/pic/series-s10064/121.html#pvareaid=2042220\"\n            },\n            {\n                \"_id\": \"5c77984dbfaa442ee1b161da\",\n                \"brand\": \"Jeep\",\n                \"model\": \"2011款 2.4L 四驱70周年限量版\",\n                \"series\": \"指南者(进口)\",\n                \"subBrand\": \"Jeep(进口)\",\n                \"url\": \"https://car.autohome.com.cn/pic/series-s10154/504.html#pvareaid=2042220\"\n            },\n            {\n                \"_id\": \"5c77984dbfaa442ee1b161dd\",\n                \"brand\": \"Jeep\",\n                \"model\": \"2011款 2.4L 四驱运动版\",\n                \"series\": \"指南者(进口)\",\n                \"subBrand\": \"Jeep(进口)\",\n                \"url\": \"https://car.autohome.com.cn/pic/series-s10272/504.html#pvareaid=2042220\"\n            },\n            {\n                \"_id\": \"5c77984dbfaa442ee1b161db\",\n                \"brand\": \"Jeep\",\n                \"model\": \"2011款 2.4L 四驱豪华导航版\",\n                \"series\": \"指南者(进口)\",\n                \"subBrand\": \"Jeep(进口)\",\n                \"url\": \"https://car.autohome.com.cn/pic/series-s10274/504.html#pvareaid=2042220\"\n            },\n            {\n                \"_id\": \"5c77984dbfaa442ee1b16217\",\n                \"brand\": \"Jeep\",\n                \"model\": \"2011款 2.4 运动版\",\n                \"series\": \"自由客\",\n                \"subBrand\": \"Jeep(进口)\",\n                \"url\": \"https://car.autohome.com.cn/pic/series-s10278/777.html#pvareaid=2042220\"\n            },\n            {\n                \"_id\": \"5c77984dbfaa442ee1b16219\",\n                \"brand\": \"Jeep\",\n                \"model\": \"2011款 2.4 经典版\",\n                \"series\": \"自由客\",\n                \"subBrand\": \"Jeep(进口)\",\n                \"url\": \"https://car.autohome.com.cn/pic/series-s10279/777.html#pvareaid=2042220\"\n            },\n            {\n                \"_id\": \"5c77984dbfaa442ee1b1619b\",\n                \"brand\": \"Jeep\",\n                \"model\": \"2011款 UK Version\",\n                \"series\": \"大切诺基(进口)\",\n                \"subBrand\": \"Jeep(进口)\",\n                \"url\": \"https://car.autohome.com.cn/pic/series-s10385/521.html#pvareaid=2042220\"\n            },\n            {\n                \"_id\": \"5c77984dbfaa442ee1b16218\",\n                \"brand\": \"Jeep\",\n                \"model\": \"2011款 2.4 经典升级版\",\n                \"series\": \"自由客\",\n                \"subBrand\": \"Jeep(进口)\",\n                \"url\": \"https://car.autohome.com.cn/pic/series-s10541/777.html#pvareaid=2042220\"\n            }\n        ],\n        \"curPageNum\": 1,\n        \"hasNext\": true,\n        \"hasPrev\": false,\n        \"numPerPage\": 10,\n        \"totalNum\": 335,\n        \"totalPageNum\": 34\n    },\n    \"message\": \"Get car ok\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Gridfs：上传文件",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "filename",
+						"value": "Snip20190228_14.png",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "file",
+					"file": {}
+				},
+				"url": {
+					"raw": "{{server_address}}/file/flask_template/files",
+					"host": [
+						"{{server_address}}"
+					],
+					"path": [
+						"file",
+						"flask_template",
+						"files"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Gridfs：上传文件 png图片",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "filename",
+								"value": "Snip20190228_14.png",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "file",
+							"file": {}
+						},
+						"url": {
+							"raw": "{{server_address}}/file/flask_template/files",
+							"host": [
+								"{{server_address}}"
+							],
+							"path": [
+								"file",
+								"flask_template",
+								"files"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "335"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/0.14.1 Python/3.6.4"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 28 Feb 2019 09:39:49 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"code\": 200,\n    \"message\": \"Create new gridfs file ok\",\n    \"data\": {\n        \"_id\": \"5c77ac60bfaa44375a908eff\",\n        \"filename\": \"Snip20190228_14.png\",\n        \"contentType\": \"image/png\",\n        \"length\": 322599,\n        \"uploadDate\": \"2019-02-28 09:39:44.616000\",\n        \"md5\": \"e58ddc6367ee2bf340135d7727ef8b20\"\n    }\n}"
+				}
+			]
+		}
+	]
+}
