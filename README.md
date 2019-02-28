@@ -430,18 +430,7 @@ supervisorctl status crifanFlaskTemplate
   * Body
     * data
 ```json
-[{
-    "code": 200,
-    "data": {
-        "_id": "5c779841bfaa442ee1b14f90",
-        "brand": "雷克萨斯",
-        "model": "2017款 300h Mark Levinson豪华版",
-        "series": "雷克萨斯ES",
-        "subBrand": "雷克萨斯",
-        "url": "https://car.autohome.com.cn/pic/series-s31975/403.html#pvareaid=2042220"
-    },
-    "message": "Get car ok"
-}]({
+{
     "code": 200,
     "data": {
         "carList": [
@@ -549,13 +538,13 @@ supervisorctl status crifanFlaskTemplate
       * [`filename`]：gridfs中file的filename，选填
     * eg：
       * 某图片：
-        * gridfs id: 5c47fdb2bfaa4495e591718a
-        * filename: crifan.com_logo.png
+        * gridfs id: `5c47fdb2bfaa4495e591718a`
+        * filename: `crifan.com_logo.png`
         * ->
         * `http://0.0.0.0:52100/file/flask_template/files/5c47fdb2bfaa4495e591718a/crifan.com_logo.png`
       * 某音频文件：
-        * gridfs id: 5c47fdb2bfaa4495e5917184
-        * filename: Sadness - Enigma part - 1.mp3
+        * gridfs id: `5c47fdb2bfaa4495e5917184`
+        * filename: `Sadness - Enigma part - 1.mp3`
         * ->
         * `http://0.0.0.0:52100/file/flask_template/files/5c47fdb2bfaa4495e5917184/Sadness%20-%20Enigma%20part%20-%201.mp3`
 
