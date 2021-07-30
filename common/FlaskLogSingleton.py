@@ -1,8 +1,16 @@
+import os
 import logging
 from logging.handlers import RotatingFileHandler
 from conf.app import settings
 from common.ThreadSafeSingleton import ThreadSafeSingleton
 # from sys import stdout
+
+def createFolder(folderFullPath):
+    """
+        create folder, even if already existed
+        Note: for Python 3.2+
+    """
+    os.makedirs(folderFullPath, exist_ok=True)
 
 def init_logger(flask_settings, enableConsole=True):
     print("init_logger")
@@ -11,6 +19,10 @@ def init_logger(flask_settings, enableConsole=True):
     flaskAppLogger.setLevel(flask_settings.LOG_LEVEL_FILE)
 
     logFormatter = logging.Formatter(flask_settings.LOG_FORMAT)
+
+    # auto create folder
+    logFoder = os.path.dirname(flask_settings.LOG_FILE_FILENAME) # 'logs/development'
+    createFolder(logFoder)
 
     fileHandler = RotatingFileHandler(
         flask_settings.LOG_FILE_FILENAME,
